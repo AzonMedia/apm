@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Azonmedia\Apm;
 
+use Azonmedia\Apm\Interfaces\ProfilerInterface;
+use Azonmedia\Apm\Interfaces\BackendInterface;
+
 class Profiler implements ProfilerInterface
 {
 
