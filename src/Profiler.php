@@ -13,6 +13,8 @@ class Profiler implements ProfilerInterface
 
     protected $backends = [];
 
+    protected $data_stored_flag = FALSE;
+
     public function __construct(BackendInterface $Backend)
     {
         $this->add_backend($Backend);
@@ -20,7 +22,7 @@ class Profiler implements ProfilerInterface
     
     public function __destruct()
     {
-        $this->store();
+        $this->store_data();
     }
     
     public function add_backend(BackendInterface $Backend) : void
@@ -33,16 +35,30 @@ class Profiler implements ProfilerInterface
     
     }
 
-    public function reset_data()
+    public function reset_data() : void
     {
         $this->profile_data = ProfilerInterface::PROFILE_STRUCTURE;
     }
     
-    protected function store()
+    public function store_data() : void
     {
+        if ($this->is_data_stored()) {
+            return;
+        }
         foreach ($this->backends as $Backend) {
             $Backend->store_data($this->profile_data);
         }
+        $this->data_stored_flag = TRUE;
+    }
+
+    public function is_data_stored() : bool
+    {
+        return $this->data_stored_flag;
+    }
+
+    public function get_data() : array
+    {
+        return $this->profile_data;
     }
     
     
