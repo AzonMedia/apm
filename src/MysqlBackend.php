@@ -6,7 +6,7 @@ namespace Azonmedia\Apm;
 
 use Azonmedia\Apm\Interfaces\BackendInterface;
 
-class NullBackend implements BackendInterface
+class MysqlBackend implements BackendInterface
 {
     public function store_data(array $data) : void
     {
