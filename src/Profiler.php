@@ -5,8 +5,6 @@ namespace Azonmedia\Apm;
 
 use Azonmedia\Apm\Interfaces\ProfilerInterface;
 use Azonmedia\Apm\Interfaces\BackendInterface;
-use Guzaba2\Base\Exceptions\InvalidArgumentException;
-use Guzaba2\Kernel\Kernel;
 
 
 class Profiler implements ProfilerInterface
@@ -18,11 +16,12 @@ class Profiler implements ProfilerInterface
 
     protected $data_stored_flag = FALSE;
 
-    public function __construct(BackendInterface $Backend)
+    public function __construct(BackendInterface $Backend, int $worker_id = -1)
     {
         $this->add_backend($Backend);
 
-        $this->profile_data['worker_id'] = Kernel::get_worker_id();
+        //$this->profile_data['worker_id'] = Kernel::get_worker_id();
+        $this->profile_data['worker_id'] = $worker_id;
         $this->profile_data['coroutine_id'] = \Swoole\Coroutine::getCid();
         $this->profile_data['execution_start_microtime'] = microtime(TRUE);
     }
@@ -43,7 +42,7 @@ class Profiler implements ProfilerInterface
     public function increment_value(string $key, float $amount) : void
     {
         if (!array_key_exists($key, $this->profile_data)) {
-            throw new InvalidArgumentException(sprintf(t::_('There is no key named "%s" in the $profile_data.'), $key));
+            throw new \InvalidArgumentException(sprintf('There is no key named "%s" in the $profile_data.', $key));
         }
         $this->profile_data[$key] += $amount;
     }

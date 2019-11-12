@@ -8,13 +8,14 @@ use Azonmedia\Apm\Interfaces\BackendInterface;
 
 class MysqlBackend implements BackendInterface
 {
+
     public function store_data(array $data) : void
     {
-        // print_r($data);
+        //TODO implement
     }
 
     public function store_data_end_time(array $data) : void
     {
-        print_r($data);
+        //TODO implement
     }
 }
