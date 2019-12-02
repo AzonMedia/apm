@@ -14,6 +14,7 @@ interface ProfilerInterface
         'time_waiting_for_connection'   => 0,//waiting time to obtain connection from the Pool
         'cnt_total_current_coroutines'  => 0,
         'cnt_subcoroutines'             => 0,
+        'memory_store_time'             => 0,//time for lookups in memory store
         'cnt_dql_statements'            => 0,
     ];
 

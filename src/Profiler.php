@@ -5,16 +5,17 @@ namespace Azonmedia\Apm;
 
 use Azonmedia\Apm\Interfaces\ProfilerInterface;
 use Azonmedia\Apm\Interfaces\BackendInterface;
+use Azonmedia\Di\Interfaces\CoroutineDependencyInterface;
 
 
-class Profiler implements ProfilerInterface
+class Profiler implements ProfilerInterface, CoroutineDependencyInterface
 {
 
-    protected $profile_data = ProfilerInterface::PROFILE_STRUCTURE;
+    protected array $profile_data = ProfilerInterface::PROFILE_STRUCTURE;
 
-    protected $backends = [];
+    protected array $backends = [];
 
-    protected $data_stored_flag = FALSE;
+    protected bool $data_stored_flag = FALSE;
 
     public function __construct(BackendInterface $Backend, int $worker_id = -1)
     {
@@ -23,7 +24,7 @@ class Profiler implements ProfilerInterface
         //$this->profile_data['worker_id'] = Kernel::get_worker_id();
         $this->profile_data['worker_id'] = $worker_id;
         $this->profile_data['coroutine_id'] = \Swoole\Coroutine::getCid();
-        $this->profile_data['execution_start_microtime'] = microtime(TRUE);
+        $this->profile_data['execution_start_microtime'] = microtime(TRUE) * 1_000_000;
     }
     
     public function __destruct()
@@ -32,6 +33,11 @@ class Profiler implements ProfilerInterface
         $this->profile_data['cnt_total_current_coroutines'] = count(\Swoole\Coroutine::listCoroutines());
 
         $this->store_data_end_time();
+    }
+
+    public function __toString() : string
+    {
+        return print_r($this->profile_data, TRUE);
     }
     
     public function add_backend(BackendInterface $Backend) : void
