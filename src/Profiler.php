@@ -5,10 +5,12 @@ namespace Azonmedia\Apm;
 
 use Azonmedia\Apm\Interfaces\ProfilerInterface;
 use Azonmedia\Apm\Interfaces\BackendInterface;
-use Azonmedia\Di\Interfaces\CoroutineDependencyInterface;
 
-
-class Profiler implements ProfilerInterface, CoroutineDependencyInterface
+/**
+ * Class Profiler
+ * @package Azonmedia\Apm
+ */
+class Profiler implements ProfilerInterface
 {
 
     protected array $profile_data = ProfilerInterface::PROFILE_STRUCTURE;
