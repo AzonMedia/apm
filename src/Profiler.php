@@ -21,19 +21,20 @@ class Profiler implements ProfilerInterface
     protected bool $data_stored_flag = FALSE;
 
     //public function __construct(BackendInterface $Backend, int $worker_id = -1)
-    public function __construct(BackendInterface $Backend, array $profile_data_structure)
+    public function __construct(BackendInterface $Backend, array $profile_data_structure, int $worker_id = -1)
     {
         $this->add_backend($Backend);
         $this->profile_data = $profile_data_structure;
 
         //$this->profile_data['worker_id'] = Kernel::get_worker_id();
         //$this->profile_data['worker_id'] = $worker_id;
-        $ServerInstance = \Swoole\Server::getInstance();
-        if ($ServerInstance) {
-            $worker_id = $ServerInstance->getWorkerId();
-        } else {
-            $worker_id = -1;
-        }
+//        $ServerInstance = \Swoole\Server::getInstance();
+//        if ($ServerInstance) {
+//            $worker_id = $ServerInstance->getWorkerId();
+//        } else {
+//            $worker_id = -1;
+//        }
+        $this->profile_data['worker_pid'] = getmypid();//currently worker_id is no longer available
         $this->profile_data['worker_id'] = $worker_id;
         $this->profile_data['coroutine_id'] = \Swoole\Coroutine::getCid();
         $this->profile_data['execution_start_microtime'] = microtime(TRUE) * 1_000_000;
