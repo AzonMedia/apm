@@ -4,7 +4,7 @@
     "description": "Application Performance Monitor",
     "keywords": ["apm","performance monitor"],
     "homepage": "https://github.com/AzonMedia/apm",
-    "license": "BSD-3-Clause",
+    "license": "MIT",
     "authors": [
         {
             "name": "Vesko Kenashkov",
