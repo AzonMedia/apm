@@ -35,15 +35,24 @@ class Profiler implements ProfilerInterface
 //            $worker_id = -1;
 //        }
         $this->profile_data['worker_pid'] = getmypid();//currently worker_id is no longer available
-        $this->profile_data['worker_id'] = $worker_id;
-        $this->profile_data['coroutine_id'] = \Swoole\Coroutine::getCid();
+        if (self::get_cid() > 0) {
+            $this->profile_data['worker_id'] = $worker_id;
+            $this->profile_data['coroutine_id'] = \Swoole\Coroutine::getCid();
+        } else {
+            $this->profile_data['worker_id'] = -1;
+            $this->profile_data['coroutine_id'] = -1;
+        }
         $this->profile_data['execution_start_microtime'] = microtime(TRUE) * 1_000_000;
     }
     
     public function __destruct()
     {
         $this->profile_data['execution_end_microtime'] = microtime(TRUE);
-        $this->profile_data['cnt_total_current_coroutines'] = count(\Swoole\Coroutine::listCoroutines());
+        if (self::get_cid() > 0) {
+            $this->profile_data['cnt_total_current_coroutines'] = count(\Swoole\Coroutine::listCoroutines());
+        } else {
+            $this->profile_data['cnt_total_current_coroutines'] = 0;
+        }
 
         $this->store_data_end_time();
     }
@@ -97,6 +106,11 @@ class Profiler implements ProfilerInterface
     public function get_data() : array
     {
         return $this->profile_data;
+    }
+
+    private static function get_cid(): int
+    {
+        return extension_loaded('swoole') ? \Swoole\Coroutine::getCid() : -1;
     }
     
     
